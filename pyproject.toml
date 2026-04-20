@@ -9,6 +9,7 @@ dependencies = [
     "fpdf2>=2.8.7",
     "langchain>=1.2.15",
     "langchain-community>=0.4.1",
+    "langchain-groq>=1.1.2",
     "langchain-openai>=1.1.14",
     "langgraph>=1.1.8",
     "presidio-analyzer>=2.2.362",
