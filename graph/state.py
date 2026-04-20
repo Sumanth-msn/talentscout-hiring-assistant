@@ -1,59 +1,38 @@
-"""
-CandidateState: The single source of truth for the entire interview session.
-All nodes read from and write to this TypedDict.
-"""
-
-from typing import TypedDict, Annotated, Optional
+from typing import TypedDict, Annotated, List, Optional
 from langgraph.graph.message import add_messages
 
 
-class TechStackEntry(TypedDict):
-    """Structured tech stack item with category classification."""
-
-    name: str
-    category: str  # "language" | "framework" | "database" | "tool" | "platform"
-
-
-class ScoreEntry(TypedDict):
-    """One evaluated answer with its score and rationale."""
-
-    tech: str
-    question: str
-    answer: str
-    score: int  # 1–5
-    rationale: str
-    difficulty: str  # easy | medium | hard
-    sentiment: str  # positive | neutral | negative
+class TechScore(TypedDict):
+    technology: str
+    score: float  # 0.0 - 10.0
+    difficulty_reached: str  # "Easy" | "Medium" | "Hard"
 
 
 class CandidateState(TypedDict):
-    # ── Conversation ──────────────────────────────────────────────────────────
+    # Conversation
     messages: Annotated[list, add_messages]
 
-    # ── Candidate profile (filled progressively) ──────────────────────────────
+    # Candidate Info (collected sequentially)
     full_name: Optional[str]
-    email: Optional[str]
-    phone: Optional[str]
+    email: Optional[str]  # stored redacted in LLM context
+    phone: Optional[str]  # stored redacted in LLM context
+    years_experience: Optional[int]
+    desired_position: Optional[str]
     current_location: Optional[str]
-    years_of_experience: Optional[str]
-    desired_positions: Optional[str]
-    tech_stack: Optional[list]  # list of TechStackEntry dicts
+    tech_stack: List[str]  # ["Python", "Django", "PostgreSQL"]
 
-    # ── Flow control ──────────────────────────────────────────────────────────
-    current_phase: str  # greeting | info_gathering | tech_interview | ended
-    exit_requested: bool  # set True when exit keyword detected
+    # Interview State
+    current_tech_index: int  # which tech we're questioning
+    current_question_index: int  # 0-4 questions per tech
+    current_difficulty: str  # "Easy" | "Medium" | "Hard"
+    questions_asked: List[str]
+    answers_given: List[str]
+    tech_scores: List[TechScore]
 
-    # ── Tech interview tracking ───────────────────────────────────────────────
-    questions_asked: list  # list of question strings
-    candidate_answers: list  # list of answer strings
-    answer_scores: list  # list of ScoreEntry dicts
-    current_difficulty: str  # easy | medium | hard
-    current_tech_index: int  # which tech in stack we're currently on
-    questions_this_tech: int  # count of questions asked for current tech (target: 3–5)
+    # Sentiment
+    sentiment_history: List[str]  # ["positive", "neutral", "negative"]
 
-    # ── Clarification handling ────────────────────────────────────────────────
-    needs_clarification: bool  # True if candidate asked to rephrase
-
-    # ── Session metadata ──────────────────────────────────────────────────────
+    # Control Flow
+    phase: str  # "greeting"|"info"|"tech_questions"|"closing"|"ended"
+    guardrail_triggered: bool
     session_id: str
-    language: str  # e.g. "English", "Hindi", "Tamil"
