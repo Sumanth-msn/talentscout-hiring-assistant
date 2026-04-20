@@ -15,4 +15,4 @@ wheels/
 
 *.db
 *.pdf
-faiss_index/
+faiss_index/.env
