@@ -1,0 +1,80 @@
+[
+  {"tech": "python", "difficulty": "easy", "question": "What is the difference between a list and a tuple in Python?", "concept": "data structures"},
+  {"tech": "python", "difficulty": "easy", "question": "Explain the difference between '==' and 'is' in Python.", "concept": "operators"},
+  {"tech": "python", "difficulty": "easy", "question": "What are Python decorators and how do you create one?", "concept": "functions"},
+  {"tech": "python", "difficulty": "medium", "question": "Explain Python's GIL and how it affects multithreading performance.", "concept": "concurrency"},
+  {"tech": "python", "difficulty": "medium", "question": "What is the difference between @staticmethod and @classmethod?", "concept": "oop"},
+  {"tech": "python", "difficulty": "medium", "question": "How does Python's garbage collection work? What is reference counting?", "concept": "memory"},
+  {"tech": "python", "difficulty": "hard", "question": "How would you implement a custom context manager using both __enter__/__exit__ and contextlib?", "concept": "advanced"},
+  {"tech": "python", "difficulty": "hard", "question": "Explain Python metaclasses and provide a real-world use case.", "concept": "metaprogramming"},
+  {"tech": "python", "difficulty": "hard", "question": "How do you profile and optimize memory usage in a Python application?", "concept": "performance"},
+
+  {"tech": "django", "difficulty": "easy", "question": "What is the Django ORM and how does it differ from writing raw SQL?", "concept": "orm"},
+  {"tech": "django", "difficulty": "easy", "question": "Explain the MTV (Model-Template-View) architecture in Django.", "concept": "architecture"},
+  {"tech": "django", "difficulty": "medium", "question": "How do Django signals work and when should you use them?", "concept": "signals"},
+  {"tech": "django", "difficulty": "medium", "question": "What is the difference between select_related and prefetch_related?", "concept": "orm"},
+  {"tech": "django", "difficulty": "hard", "question": "How would you implement custom middleware in Django for request/response logging?", "concept": "middleware"},
+  {"tech": "django", "difficulty": "hard", "question": "Explain Django's caching framework and how you'd implement per-view caching.", "concept": "performance"},
+
+  {"tech": "fastapi", "difficulty": "easy", "question": "What makes FastAPI faster than Flask? What is ASGI?", "concept": "fundamentals"},
+  {"tech": "fastapi", "difficulty": "medium", "question": "How do you implement dependency injection in FastAPI?", "concept": "dependencies"},
+  {"tech": "fastapi", "difficulty": "medium", "question": "Explain Pydantic models and their role in FastAPI request validation.", "concept": "validation"},
+  {"tech": "fastapi", "difficulty": "hard", "question": "How would you implement OAuth2 with JWT tokens in FastAPI?", "concept": "security"},
+  {"tech": "fastapi", "difficulty": "hard", "question": "How do you handle background tasks and async operations in FastAPI?", "concept": "async"},
+
+  {"tech": "react", "difficulty": "easy", "question": "What is the difference between state and props in React?", "concept": "fundamentals"},
+  {"tech": "react", "difficulty": "easy", "question": "Explain the React component lifecycle (functional component perspective).", "concept": "lifecycle"},
+  {"tech": "react", "difficulty": "medium", "question": "What is the difference between useEffect with an empty array vs no dependency array?", "concept": "hooks"},
+  {"tech": "react", "difficulty": "medium", "question": "Explain React's reconciliation algorithm and the role of keys.", "concept": "rendering"},
+  {"tech": "react", "difficulty": "hard", "question": "How would you optimize a React app suffering from unnecessary re-renders?", "concept": "performance"},
+  {"tech": "react", "difficulty": "hard", "question": "Explain the difference between useCallback, useMemo, and memo.", "concept": "optimization"},
+
+  {"tech": "sql", "difficulty": "easy", "question": "What is the difference between INNER JOIN, LEFT JOIN, and FULL OUTER JOIN?", "concept": "joins"},
+  {"tech": "sql", "difficulty": "easy", "question": "Explain the difference between WHERE and HAVING clauses.", "concept": "filtering"},
+  {"tech": "sql", "difficulty": "medium", "question": "What are window functions? Give an example using RANK() or ROW_NUMBER().", "concept": "advanced"},
+  {"tech": "sql", "difficulty": "medium", "question": "How do database indexes work and when would you avoid using them?", "concept": "indexing"},
+  {"tech": "sql", "difficulty": "hard", "question": "Explain database normalization (1NF, 2NF, 3NF) with examples.", "concept": "design"},
+  {"tech": "sql", "difficulty": "hard", "question": "How would you optimize a slow query? Walk me through your process.", "concept": "optimization"},
+
+  {"tech": "postgresql", "difficulty": "easy", "question": "What is the difference between PostgreSQL and MySQL?", "concept": "fundamentals"},
+  {"tech": "postgresql", "difficulty": "medium", "question": "Explain PostgreSQL JSONB vs JSON column types and when to use each.", "concept": "data types"},
+  {"tech": "postgresql", "difficulty": "hard", "question": "How do you configure PostgreSQL for high availability using replication?", "concept": "devops"},
+
+  {"tech": "docker", "difficulty": "easy", "question": "What is the difference between a Docker image and a Docker container?", "concept": "fundamentals"},
+  {"tech": "docker", "difficulty": "easy", "question": "Explain the purpose of a Dockerfile and its key instructions (FROM, RUN, COPY, CMD).", "concept": "dockerfile"},
+  {"tech": "docker", "difficulty": "medium", "question": "What is Docker Compose and how does it differ from running containers manually?", "concept": "orchestration"},
+  {"tech": "docker", "difficulty": "medium", "question": "Explain Docker networking modes: bridge, host, and overlay.", "concept": "networking"},
+  {"tech": "docker", "difficulty": "hard", "question": "How would you optimize a Docker image to reduce its size significantly?", "concept": "optimization"},
+
+  {"tech": "aws", "difficulty": "easy", "question": "Explain the difference between EC2, Lambda, and ECS.", "concept": "compute"},
+  {"tech": "aws", "difficulty": "medium", "question": "What is the difference between S3, EBS, and EFS storage options?", "concept": "storage"},
+  {"tech": "aws", "difficulty": "medium", "question": "How does IAM work in AWS? Explain roles vs users vs policies.", "concept": "security"},
+  {"tech": "aws", "difficulty": "hard", "question": "Design a scalable, highly available architecture for a web application on AWS.", "concept": "architecture"},
+
+  {"tech": "machine learning", "difficulty": "easy", "question": "Explain the difference between supervised, unsupervised, and reinforcement learning.", "concept": "fundamentals"},
+  {"tech": "machine learning", "difficulty": "medium", "question": "What is overfitting and how do you prevent it?", "concept": "model training"},
+  {"tech": "machine learning", "difficulty": "medium", "question": "Explain the bias-variance tradeoff.", "concept": "theory"},
+  {"tech": "machine learning", "difficulty": "hard", "question": "How do you handle class imbalance in a classification problem?", "concept": "data"},
+  {"tech": "machine learning", "difficulty": "hard", "question": "Walk me through how gradient descent works and its variants (SGD, Adam, RMSProp).", "concept": "optimization"},
+
+  {"tech": "javascript", "difficulty": "easy", "question": "What is the difference between var, let, and const?", "concept": "fundamentals"},
+  {"tech": "javascript", "difficulty": "medium", "question": "Explain event bubbling and event delegation in the DOM.", "concept": "dom"},
+  {"tech": "javascript", "difficulty": "medium", "question": "What is the event loop and how does JavaScript handle asynchronous code?", "concept": "async"},
+  {"tech": "javascript", "difficulty": "hard", "question": "Explain closures and provide a practical example of their use.", "concept": "advanced"},
+
+  {"tech": "typescript", "difficulty": "easy", "question": "What are the main benefits of TypeScript over JavaScript?", "concept": "fundamentals"},
+  {"tech": "typescript", "difficulty": "medium", "question": "Explain the difference between interface and type in TypeScript.", "concept": "types"},
+  {"tech": "typescript", "difficulty": "hard", "question": "What are TypeScript generics and how do conditional types work?", "concept": "advanced"},
+
+  {"tech": "nodejs", "difficulty": "easy", "question": "What is the Node.js event loop and how does non-blocking I/O work?", "concept": "fundamentals"},
+  {"tech": "nodejs", "difficulty": "medium", "question": "Explain the difference between process.nextTick(), setImmediate(), and setTimeout().", "concept": "async"},
+  {"tech": "nodejs", "difficulty": "hard", "question": "How would you implement clustering in Node.js to utilize multiple CPU cores?", "concept": "performance"},
+
+  {"tech": "mongodb", "difficulty": "easy", "question": "How does MongoDB differ from relational databases? What is a document?", "concept": "fundamentals"},
+  {"tech": "mongodb", "difficulty": "medium", "question": "Explain MongoDB aggregation pipeline and give an example.", "concept": "queries"},
+  {"tech": "mongodb", "difficulty": "hard", "question": "How do you design schemas in MongoDB for a many-to-many relationship?", "concept": "schema design"},
+
+  {"tech": "kubernetes", "difficulty": "easy", "question": "What problem does Kubernetes solve and what are its main components?", "concept": "fundamentals"},
+  {"tech": "kubernetes", "difficulty": "medium", "question": "Explain the difference between a Deployment, StatefulSet, and DaemonSet.", "concept": "workloads"},
+  {"tech": "kubernetes", "difficulty": "hard", "question": "How does Kubernetes handle rolling updates and rollbacks?", "concept": "deployment"}
+]
