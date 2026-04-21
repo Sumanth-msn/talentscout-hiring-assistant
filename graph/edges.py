@@ -1,3 +1,10 @@
+"""
+graph/edges.py — Graph definition for TalentScout.
+NOTE: The graph is only used for the initial greeting invocation.
+All subsequent user-input processing is handled directly in app.py
+using the merge() helper to avoid LangGraph list-overwrite issues.
+"""
+
 from langgraph.graph import StateGraph, END
 from graph.state import CandidateState
 from graph.nodes import (
@@ -10,9 +17,9 @@ from graph.nodes import (
 )
 
 
-def route_after_guardrail(state: dict) -> str:
+def _route_guardrail(state: dict) -> str:
     if state.get("guardrail_triggered"):
-        return "closing" if state.get("phase") == "closing" else "end_guardrail"
+        return "closing" if state.get("phase") == "closing" else END
     phase = state.get("phase", "greeting")
     if phase == "greeting":
         return "greeting"
@@ -25,19 +32,16 @@ def route_after_guardrail(state: dict) -> str:
     return END
 
 
-def route_after_info(state: dict) -> str:
-    if state.get("phase") == "tech_questions":
-        return "tech_question"
-    return "info_gather"  # still collecting info
+def _route_info(state: dict) -> str:
+    return "tech_question" if state.get("phase") == "tech_questions" else END
 
 
-def route_after_evaluator(state: dict) -> str:
-    if state.get("phase") == "closing":
-        return "closing"
-    return "tech_question"  # more questions to ask
+def _route_eval(state: dict) -> str:
+    return "closing" if state.get("phase") == "closing" else "tech_question"
 
 
 def build_graph():
+    """Build and compile the LangGraph state machine."""
     g = StateGraph(CandidateState)
 
     g.add_node("guardrail", guardrail_node)
@@ -51,32 +55,32 @@ def build_graph():
 
     g.add_conditional_edges(
         "guardrail",
-        route_after_guardrail,
+        _route_guardrail,
         {
             "greeting": "greeting",
             "info_gather": "info_gather",
             "tech_question": "tech_question",
             "closing": "closing",
-            "end_guardrail": END,
+            END: END,
         },
     )
 
-    g.add_edge("greeting", END)  # waits for user input
+    g.add_edge("greeting", END)
 
     g.add_conditional_edges(
         "info_gather",
-        route_after_info,
+        _route_info,
         {
             "tech_question": "tech_question",
-            "info_gather": END,  # waits for next user input
+            END: END,
         },
     )
 
-    g.add_edge("tech_question", END)  # waits for candidate's answer
+    g.add_edge("tech_question", END)
 
     g.add_conditional_edges(
         "evaluator",
-        route_after_evaluator,
+        _route_eval,
         {
             "tech_question": "tech_question",
             "closing": "closing",

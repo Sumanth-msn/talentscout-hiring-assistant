@@ -1,38 +1,43 @@
-from typing import TypedDict, Annotated, List, Optional
-from langgraph.graph.message import add_messages
+"""
+graph/state.py — CandidateState definition.
+NOTE: messages is a plain list here because we call nodes directly in app.py,
+not via graph.invoke(). The merge() function in app.py handles appending.
+"""
+
+from typing import TypedDict, List, Optional
 
 
 class TechScore(TypedDict):
     technology: str
-    score: float  # 0.0 - 10.0
+    score: float  # 0.0 – 10.0
     difficulty_reached: str  # "Easy" | "Medium" | "Hard"
 
 
 class CandidateState(TypedDict):
-    # Conversation
-    messages: Annotated[list, add_messages]
+    # Conversation history
+    messages: list
 
-    # Candidate Info (collected sequentially)
+    # Candidate info — all Optional so we can detect "not yet filled"
     full_name: Optional[str]
-    email: Optional[str]  # stored redacted in LLM context
-    phone: Optional[str]  # stored redacted in LLM context
+    email: Optional[str]
+    phone: Optional[str]
     years_experience: Optional[int]
     desired_position: Optional[str]
     current_location: Optional[str]
-    tech_stack: List[str]  # ["Python", "Django", "PostgreSQL"]
+    tech_stack: Optional[List[str]]  # None until filled, then a list
 
-    # Interview State
-    current_tech_index: int  # which tech we're questioning
-    current_question_index: int  # 0-4 questions per tech
+    # Interview progress
+    current_tech_index: int
+    current_question_index: int
     current_difficulty: str  # "Easy" | "Medium" | "Hard"
     questions_asked: List[str]
     answers_given: List[str]
     tech_scores: List[TechScore]
 
-    # Sentiment
-    sentiment_history: List[str]  # ["positive", "neutral", "negative"]
+    # Sentiment tracking
+    sentiment_history: List[str]  # "positive" | "neutral" | "negative"
 
-    # Control Flow
+    # Control flow
     phase: str  # "greeting"|"info"|"tech_questions"|"closing"|"ended"
     guardrail_triggered: bool
     session_id: str
