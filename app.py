@@ -260,6 +260,7 @@ def merge(state: dict, delta: dict) -> dict:
         "answers_given",
         "sentiment_history",
         "tech_scores",
+        "current_tech_scores",
     }
 
     for k, v in delta.items():
@@ -423,6 +424,7 @@ if "cs" not in st.session_state:
         "questions_asked": [],
         "answers_given": [],
         "tech_scores": [],
+        "current_tech_scores": [],
         "sentiment_history": [],
         "phase": "greeting",
         "guardrail_triggered": False,

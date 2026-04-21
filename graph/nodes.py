@@ -189,10 +189,8 @@ def info_gather_node(state: dict) -> dict:
         update["current_tech_index"] = 0
         update["current_question_index"] = 0
         update["current_difficulty"] = "Easy"
-        update["tech_scores"] = []
-        update["questions_asked"] = []
-        update["answers_given"] = []
-        update["sentiment_history"] = []
+        # Do NOT reset questions_asked, answers_given, sentiment_history, tech_scores here
+        # They start empty from session init and must accumulate during the interview
 
     return update
 
@@ -260,7 +258,7 @@ def evaluator_node(state: dict) -> dict:
     """
     Scores the candidate's last answer using LLM-as-Judge.
     Updates difficulty (Dynamic Difficulty Adjustment).
-    Decides whether to continue with this tech or move to the next.
+    Accumulates per-question scores and averages them when a tech is complete.
     """
     tech_stack = state.get("tech_stack") or []
     idx = state.get("current_tech_index", 0)
@@ -284,9 +282,13 @@ def evaluator_node(state: dict) -> dict:
 
     # LLM-as-Judge evaluation
     evaluation = score_answer(last_question, last_answer, technology)
-    score = evaluation.get("score", 5)
+    score = float(evaluation.get("score", 5))
     next_difficulty = evaluation.get("next_difficulty", "Medium")
-    feedback = evaluation.get("feedback", "")
+    feedback = evaluation.get("feedback", "Answer received.")
+
+    # Accumulate per-question scores in a running list stored in state
+    # Key: "current_tech_scores" — list of floats for the current technology
+    current_tech_scores = list(state.get("current_tech_scores") or []) + [score]
 
     # Append this answer to answers_given
     answers_given = (state.get("answers_given") or []) + [last_answer]
@@ -301,15 +303,17 @@ def evaluator_node(state: dict) -> dict:
         "sentiment_history": sentiment_history,
         "current_difficulty": next_difficulty,
         "current_question_index": new_q_idx,
+        "current_tech_scores": current_tech_scores,
     }
 
     if new_q_idx >= MAX_QUESTIONS_PER_TECH:
-        # Finished all questions for this technology
+        # All questions done for this technology — compute average score
+        avg_score = round(sum(current_tech_scores) / len(current_tech_scores), 1)
         tech_scores = list(state.get("tech_scores") or [])
         tech_scores.append(
             {
                 "technology": technology,
-                "score": float(score),
+                "score": avg_score,
                 "difficulty_reached": state.get("current_difficulty", "Easy"),
             }
         )
@@ -319,6 +323,7 @@ def evaluator_node(state: dict) -> dict:
         updates["current_tech_index"] = next_idx
         updates["current_question_index"] = 0
         updates["current_difficulty"] = "Easy"
+        updates["current_tech_scores"] = []  # reset for next technology
 
         if next_idx < len(tech_stack):
             next_tech = tech_stack[next_idx]

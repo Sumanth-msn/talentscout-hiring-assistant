@@ -107,15 +107,18 @@ def generate_report(state: dict) -> bytes:
     if sentiments:
         pos = sentiments.count("positive")
         neg = sentiments.count("negative")
+        neu = sentiments.count("neutral")
+        total = len(sentiments)
+        overall = "Confident" if pos > neg else ("Mixed" if pos == neg else "Hesitant")
         pdf.set_font("Helvetica", "B", 14)
         pdf.cell(0, 9, "Behavioural Signals", ln=True)
         pdf.set_font("Helvetica", "", 11)
-        overall = "Confident" if pos >= neg else "Hesitant"
         pdf.multi_cell(
             0,
             7,
-            f"Positive responses: {pos}/{len(sentiments)}.  "
-            f"Negative signals: {neg}/{len(sentiments)}.  "
+            f"Confident responses: {pos}/{total}.  "
+            f"Neutral responses: {neu}/{total}.  "
+            f"Uncertain responses: {neg}/{total}.  "
             f"Overall tone: {overall}.",
         )
 

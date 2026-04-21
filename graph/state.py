@@ -33,6 +33,7 @@ class CandidateState(TypedDict):
     questions_asked: List[str]
     answers_given: List[str]
     tech_scores: List[TechScore]
+    current_tech_scores: List[float]  # running scores for current technology
 
     # Sentiment tracking
     sentiment_history: List[str]  # "positive" | "neutral" | "negative"
