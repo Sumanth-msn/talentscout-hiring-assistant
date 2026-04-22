@@ -58,18 +58,38 @@ CUSTOM_CSS = """
 
 #MainMenu, footer, header,
 [data-testid="stDecoration"],
-[data-testid="stHeader"],
 [data-testid="stToolbar"],
 [data-testid="stStatusWidget"] { display: none !important; }
 
+/* ── Force sidebar always visible — never collapse on rerun or resize ── */
 [data-testid="stSidebar"] {
     background: var(--bg2) !important;
     border-right: 1px solid var(--border) !important;
+    min-width: 280px !important;
+    max-width: 280px !important;
+    width: 280px !important;
+    transform: none !important;
+    visibility: visible !important;
+    display: block !important;
+    position: relative !important;
+}
+[data-testid="stSidebar"][aria-expanded="false"] {
+    transform: none !important;
+    margin-left: 0 !important;
+    display: block !important;
+    visibility: visible !important;
 }
 [data-testid="stSidebar"] > div:first-child {
     padding: 0 !important;
     overflow-x: hidden !important;
 }
+/* Hide the collapse arrow button — sidebar is always open */
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="collapsedControl"]        { display: none !important; }
+
+/* Keep header hidden but preserve its space so sidebar toggle isn't needed */
+[data-testid="stHeader"] { visibility: hidden !important; height: 0 !important; }
+
 
 [data-testid="stMainBlockContainer"] {
     padding: 0 2.5rem 5rem !important;
@@ -407,8 +427,7 @@ if "graph" not in st.session_state:
     st.session_state.graph = build_graph()
 
 if "cs" not in st.session_state:
-    # All list fields start empty; all optional fields start as None
-    # IMPORTANT: tech_stack starts as None so info_gather_node can detect it
+    # Initialise with safe defaults first — sidebar can render immediately
     initial: dict = {
         "messages": [],
         "full_name": None,
@@ -417,7 +436,7 @@ if "cs" not in st.session_state:
         "years_experience": None,
         "desired_position": None,
         "current_location": None,
-        "tech_stack": None,  # ← None, not []
+        "tech_stack": None,
         "current_tech_index": 0,
         "current_question_index": 0,
         "current_difficulty": "Easy",
@@ -430,19 +449,61 @@ if "cs" not in st.session_state:
         "guardrail_triggered": False,
         "session_id": "",
     }
-    # Fire greeting immediately — use graph.invoke only for this first call
-    from graph.nodes import greeting_node, guardrail_node
-
-    g_delta = guardrail_node(initial)
-    initial = merge(initial, g_delta)
-    gr_delta = greeting_node(initial)
-    initial = merge(initial, gr_delta)
+    # Store immediately so sidebar always has state to render
     st.session_state.cs = initial
+
+    # Fire greeting node — wrapped so a slow LLM call never crashes the UI
+    try:
+        from graph.nodes import greeting_node, guardrail_node
+
+        g_delta = guardrail_node(initial)
+        initial = merge(initial, g_delta)
+        gr_delta = greeting_node(initial)
+        initial = merge(initial, gr_delta)
+        st.session_state.cs = initial
+    except Exception:
+        # On failure keep the default state; user sees blank chat but sidebar renders
+        pass
 
 cs = st.session_state.cs
 
-# ── Always render sidebar first (before any st.stop) ──────────────────────────
-render_sidebar(cs)
+# ── Force sidebar open on every rerun via JS ───────────────────────────────────
+# Streamlit only respects initial_sidebar_state on first load.
+# This snippet clicks the expand button if the sidebar is collapsed.
+st.markdown(
+    """
+<script>
+(function() {
+    function expandSidebar() {
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sidebar && sidebar.getAttribute('aria-expanded') === 'false') {
+            const btn = window.parent.document.querySelector('[data-testid="stSidebarCollapseButton"]');
+            if (btn) btn.click();
+        }
+    }
+    // Run after DOM settles
+    setTimeout(expandSidebar, 300);
+    setTimeout(expandSidebar, 800);
+})();
+</script>
+""",
+    unsafe_allow_html=True,
+)
+
+# ── SIDEBAR — rendered unconditionally before any st.stop() ────────────────────
+try:
+    render_sidebar(cs)
+except Exception:
+    with st.sidebar:
+        st.markdown(
+            """
+        <div class="ts-sb-brand">
+            <div class="ts-sb-name">TalentScout</div>
+            <div class="ts-sb-tagline">AI Hiring Assistant · v1.0</div>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
 
 # ── Hero ───────────────────────────────────────────────────────────────────────
 st.markdown(
