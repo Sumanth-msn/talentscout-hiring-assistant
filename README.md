@@ -60,7 +60,7 @@ fileWatcherType = "none"
 
 ## Usage Guide
 
-1. App opens at `http://localhost:8501` and greets automatically
+1. App opening the app, it greets automatically
 2. Answer each prompt naturally — the LLM extracts structured data from free text
 3. After the tech stack is submitted, technical questions begin immediately
 4. Each answer receives feedback + a difficulty adjustment for the next question
