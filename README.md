@@ -205,8 +205,7 @@ Candidates provide email and phone naturally mid-conversation. The redactor runs
 
 ## Demo
 
-> **Loom Walkthrough:** _[Add your Loom link here]_  
-> **Live App:** _[Add your Streamlit Cloud link here]_
+> **Live App:** _[https://talentscout-hiring-assistant-by-sumanth-msn.streamlit.app]_
 
 ---
 
